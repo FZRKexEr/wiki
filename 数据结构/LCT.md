@@ -1,4 +1,4 @@
-# Link-Cut Tree 
+# 关于 Link-Cut Tree
 
 ## 实链剖分
 
