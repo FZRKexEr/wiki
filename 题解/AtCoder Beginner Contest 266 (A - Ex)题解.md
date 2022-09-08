@@ -6,7 +6,7 @@
 
 # B - Modulo Number	
 
-答案是 $(n \% 998244353 + 998244353) \% 998244353$
+答案是 $(n \mod 998244353 + 998244353) \mod 998244353$
 
 # C - Convex Quadrilateral	
 
