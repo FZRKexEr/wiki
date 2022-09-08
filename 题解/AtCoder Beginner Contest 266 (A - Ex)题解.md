@@ -193,4 +193,83 @@ signed main() {
 
 # EX - Snuke Panic (2D)	
 
-正在写...
+考虑 DP 转移, 满足 $|x1 - x2| + y1 - y2 \leq t1 - t2$ 和 $y2 \leq y1$ 的两点 $(t1, x1, y1)$ 和 $(t2, x2, y2)$。可以从后者转移向前者。把上面的式子变形，可以得到三个不等式:
+$$y2 \leq y1$$
+$$-x2 - y2 + t2 \leq -x1 -y1 + t1$$
+$$x2 - y2 + t2 \leq x1 - y1 + t1$$
+
+显然这是个三维偏序问题。用 CDQ 分治转移一下 DP 就行了。
+
+```cpp
+
+signed main() {
+  file(1, 0);
+  ios::sync_with_stdio(false); 
+  cin.tie(0);
+   
+  int n; cin >> n;
+  vector<array<int, 5>> arr;
+
+  for (int i = 1; i <= n; i++) {
+    int t, x, y, a; cin >> t >> x >> y >> a;
+    arr.push_back({t, x, y, a, i});
+  }
+
+  for (int i = 0; i < n; i++) {
+    int val1 = -arr[i][1] - arr[i][2] + arr[i][0];
+    int val2 = arr[i][1] - arr[i][2] + arr[i][0];
+    arr[i][0] = val1;
+    arr[i][1] = val2;
+  }
+
+  arr.push_back({0, 0, 0, 0});
+
+  sort(arr.begin(), arr.end());
+
+  vector<int> dp(n + 2, -INF);
+  dp[0] = 0;
+
+  int ans = 0;
+  function<void(int, int)> cdq = [&](int l, int r) {
+    if (l == r) return;
+    int mid = (l + r) >> 1;
+    cdq(l, mid);
+
+    sort(arr.begin() + l, arr.begin() + mid + 1, [&](auto i, auto j) {
+      return i[1] < j[1];
+    });
+    sort(arr.begin() + mid + 1, arr.begin() + r + 1, [&](auto i, auto j) {
+      return i[1] < j[1];
+    });
+
+    int p = l;
+
+    Segment_Tree T(0, 1e9);
+
+    for (int i = mid + 1; i <= r; i++) {
+      while (p <= mid && arr[p][1] <= arr[i][1]) {
+        T.modify(arr[p][2], dp[arr[p][4]]);
+        p++;
+      }
+      int o = arr[i][4];
+      dp[o] = max(dp[o], T.query(0, arr[i][2]).maxn + arr[i][3]);
+    }
+
+    sort(arr.begin() + l, arr.begin() + mid + 1);
+    sort(arr.begin() + mid + 1, arr.begin() + r + 1);
+
+    cdq(mid + 1, r);
+  };
+
+  cdq(0, n);
+
+  for (int i = 1; i <= n; i++) {
+    ans = max(ans, dp[i]);
+  }
+
+  cout << ans << endl;
+
+  return 0;
+}
+```
+
