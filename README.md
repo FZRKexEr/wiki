@@ -62,6 +62,6 @@
 
 ### 其他
 - [一些经验](其他/一些经验.md)
-- [memset](其他/memtset.md)
+- [memset](其他/memset.md)
 
 
