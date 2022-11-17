@@ -13,6 +13,8 @@
 ### 第一个
 $$g(n, j)=\sum_{i=1}^n F(i)[i \in \mathrm{p} \| i \text { 的最小质因子大于第 } \mathrm{j} \text { 个素数 }]$$
 
+注意第零个质数默认为 $1$, $g(n, 0)$ 不包含 $F(1)$
+
 转移
 
 $$g(n, j)= \begin{cases}g(n, j-1) & p_j^2>n \\ g(n, j-1)-F\left(p_j\right) \cdot\left(g\left(\left\lfloor\frac{n}{p_j}\right\rfloor, j-1\right)-\sum_{i=1}^{j-1} F\left(p_j\right)\right) & p_j^2 \leq n\end{cases}$$
